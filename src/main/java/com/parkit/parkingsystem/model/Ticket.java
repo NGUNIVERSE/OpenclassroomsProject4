@@ -1,7 +1,9 @@
 package com.parkit.parkingsystem.model;
 
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Date;
+
+//import com.parkit.parkingsystem.constants.ParkingType;
 
 public class Ticket {
     private int id;
@@ -20,11 +22,12 @@ public class Ticket {
     }
 
     public ParkingSpot getParkingSpot() {
-        return parkingSpot;
+        return parkingSpot == null ? null :  new ParkingSpot( parkingSpot.getId(), parkingSpot.getParkingType(), parkingSpot.isAvailable());// == null ? null : (ParkingSpot)parkingSpot.clone();
     }
 
     public void setParkingSpot(ParkingSpot parkingSpot) {
-        this.parkingSpot = parkingSpot;
+    
+        this.parkingSpot = parkingSpot == null ? null :  new ParkingSpot( parkingSpot.getId(), parkingSpot.getParkingType(), parkingSpot.isAvailable());
     }
 
     public String getVehicleRegNumber() {
@@ -44,18 +47,25 @@ public class Ticket {
     }
 
     public Date getInTime() {
-        return inTime;
+    	//inTime = new Date(inTime.getTime()); // pourquoi cela ne marche pas avec getOutTime() ????????,
+       return this.inTime == null ? null : new Date(inTime.getTime()); 
+       // return inTime;
     }
 
     public void setInTime(Date inTime) {
-        this.inTime = inTime;
+    	
+        this.inTime = inTime == null ? null : new Date(inTime.getTime()); //pourquoi cette solution ne marche pas pour setOutTime ??????????????,
     }
 
     public Date getOutTime() {
-        return outTime;
+   // 	outTime = new Date(outTime.getTime());
+    	
+    	return this.outTime == null ? null : new Date(outTime.getTime());
+      //  return outTime;
     }
 
     public void setOutTime(Date outTime) {
-        this.outTime = outTime;
+    	
+        this.outTime = outTime == null ? null : new Date(outTime.getTime());//(outTime ==null ? null : (Date)outTime.clone());//outTime; //new Date(outTime.getTime());
     }
 }
