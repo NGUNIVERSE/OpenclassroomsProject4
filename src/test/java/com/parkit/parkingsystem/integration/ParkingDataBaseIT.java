@@ -43,7 +43,7 @@ public class ParkingDataBaseIT {
 
     @BeforeEach
     private void setUpPerTest() throws Exception {
-        when(inputReaderUtil.readSelection()).thenReturn(1);
+        when(inputReaderUtil.readSelection()).thenReturn(1); //
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         dataBasePrepareService.clearDataBaseEntries();
     }
@@ -58,7 +58,7 @@ public class ParkingDataBaseIT {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
         //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
-        Ticket saved = ticketDAO.getTicket("ABCDEF");
+        Ticket saved = ticketDAO.getTicketToCheck("ABCDEF");
         assertThat(saved).isNotNull();
         assertThat(saved.getOutTime()).isNull();
         assertThat(saved.getParkingSpot()).isNotNull();
@@ -73,7 +73,7 @@ public class ParkingDataBaseIT {
         //TODO: check that the fare generated and out time are populated correctly in the database
         Thread.sleep(1000L);
         parkingService.processExitingVehicle();
-        Ticket saved = ticketDAO.getTicket("ABCDEF");
+        Ticket saved = ticketDAO.getTicketToCheck("ABCDEF");
         assertThat(saved.getOutTime()).isNotNull();
         assertThat(saved.getPrice()).isGreaterThanOrEqualTo(0.0);
     }

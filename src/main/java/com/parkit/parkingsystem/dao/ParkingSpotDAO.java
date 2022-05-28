@@ -24,7 +24,7 @@ public class ParkingSpotDAO {
         try {
             con = dataBaseConfig.getConnection(); 
             ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT); // a mettre en dehors du try pour que finnaly puisse l'utiliser
-            ps.setString(1, parkingType.toString());
+            ps.setString(1, parkingType.toString()); // intègre le paramètre numéro 1 avec le type de parking à la requete SQL
             rs = ps.executeQuery(); // a mettre en dehors du try pour que finnaly puisse l'utiliser
             if(rs.next()){
                 result = rs.getInt(1);;
@@ -42,14 +42,14 @@ public class ParkingSpotDAO {
     }
 
     public boolean updateParking(ParkingSpot parkingSpot){
-        //update the availability fo that parking slot
+        //update the availability for that parking slot
         Connection con = null;
         PreparedStatement ps = null;
         try {
             con = dataBaseConfig.getConnection();
             ps = con.prepareStatement(DBConstants.UPDATE_PARKING_SPOT);
-            ps.setBoolean(1, parkingSpot.isAvailable());
-            ps.setInt(2, parkingSpot.getId());
+            ps.setBoolean(1, parkingSpot.isAvailable()); // agit sur le paramètre 1 de la commande SQL
+            ps.setInt(2, parkingSpot.getId()); // agit sur le paramètre 2 de la commande SQL
             int updateRowCount = ps.executeUpdate();
             dataBaseConfig.closePreparedStatement(ps);
             return (updateRowCount == 1);
