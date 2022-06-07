@@ -57,8 +57,7 @@ public class ParkingDataBaseIT {
     public void testParkingACar() throws SQLException {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
-        //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
-        Ticket saved = ticketDAO.getTicketToCheck("ABCDEF");
+        Ticket saved = ticketDAO.getTicket("ABCDEF");
         assertThat(saved).isNotNull();
         assertThat(saved.getOutTime()).isNull();
         assertThat(saved.getParkingSpot()).isNotNull();
@@ -70,39 +69,12 @@ public class ParkingDataBaseIT {
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
-        //TODO: check that the fare generated and out time are populated correctly in the database
         Thread.sleep(1000L);
-        parkingService.processExitingVehicle();
-        Ticket saved = ticketDAO.getTicketToCheck("ABCDEF");
+        Ticket saved = ticketDAO.getTicket("ABCDEF");
         assertThat(saved.getOutTime()).isNotNull();
         assertThat(saved.getPrice()).isGreaterThanOrEqualTo(0.0);
     }
     
-    /**************************************************************************************/
-    /*
-     *  @Test
-    public void testParkingACar() throws SQLException {
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, fareCalculatorService);
-        parkingService.processIncomingVehicle();
-        Ticket saved = ticketDAO.getTicket("ABCDEF");
-        assertThat(saved).isNotNull();
-        assertThat(saved.getOutTime()).isNull();
-        assertThat(saved.getParkingSpot()).isNotNull();
-        assertThat(saved.getParkingSpot().isAvailable()).isFalse();
-    }
-
-    @Test
-    public void testParkingLotExit() throws InterruptedException, SQLException {
-        testParkingACar();
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, fareCalculatorService);
-        Thread.sleep(1000L);
-        parkingService.processExitingVehicle();
-        Ticket saved = ticketDAO.getTicket("ABCDEF");
-        assertThat(saved.getOutTime()).isNotNull();
-        assertThat(saved.getPrice()).isGreaterThanOrEqualTo(0.0);
-
-    }
-     */
     /*************************************************************************************************/
 
 }

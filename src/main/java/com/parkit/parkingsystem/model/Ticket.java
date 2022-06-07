@@ -1,9 +1,8 @@
 package com.parkit.parkingsystem.model;
 
-//import java.util.Calendar;
+
 import java.util.Date;
 
-//import com.parkit.parkingsystem.constants.ParkingType;
 
 public class Ticket {
     private int id;
@@ -47,25 +46,25 @@ public class Ticket {
     }
 
     public Date getInTime() {
-    	//inTime = new Date(inTime.getTime()); // pourquoi cela ne marche pas avec getOutTime() ????????,
+    
        return this.inTime == null ? null : new Date(inTime.getTime()); 
-       // return inTime;
+    
     }
 
     public void setInTime(Date inTime) {
     	
-        this.inTime = inTime == null ? null : new Date(inTime.getTime()); //pourquoi cette solution ne marche pas pour setOutTime ??????????????,
+        this.inTime = inTime == null ? null : new Date(inTime.getTime()); 
     }
 
     public Date getOutTime() {
-   // 	outTime = new Date(outTime.getTime());
+  
     	
     	return this.outTime == null ? null : new Date(outTime.getTime());
-      //  return outTime;
+      
     }
 
     public void setOutTime(Date outTime) {
     	
-        this.outTime = outTime == null ? null : new Date(outTime.getTime());//(outTime ==null ? null : (Date)outTime.clone());//outTime; //new Date(outTime.getTime());
+        this.outTime = outTime == null ? null : new Date(outTime.getTime());
     }
 }

@@ -21,34 +21,33 @@ public class ParkingService {
     private InputReaderUtil inputReaderUtil;
     private ParkingSpotDAO parkingSpotDAO;
     private  TicketDAO ticketDAO;
-    private boolean userIsRecurrent;
-    private boolean isVehicleInTheParkingYet;
+
     
     public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO){
         this.inputReaderUtil = inputReaderUtil;
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
-        this.userIsRecurrent = false;
-        this.isVehicleInTheParkingYet = false;
+
     }
 
     public void processIncomingVehicle() {
         try{
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable(); //vérifie la prochain place disponible
-            if(parkingSpot !=null && parkingSpot.getId() > 0){ // vérifie que l'objet parkingSpot existe et que son ID est > à 0
-                String vehicleRegNumber = getVehichleRegNumber(); // récupère le numéro de plaque auprès de l'utilisateur
-                
-                userIsRecurrent =  ticketDAO.isVehicleRecurrent(vehicleRegNumber); //Checker ici si le véhicule est recurrent
+            if(parkingSpot !=null && parkingSpot.getId() > 0){           // vérifie que l'objet parkingSpot existe et que son ID est > à 0
+                String vehicleRegNumber = getVehichleRegNumber();        // récupère le numéro de plaque auprès de l'utilisateur
+                boolean userIsRecurrent;
+                userIsRecurrent =  ticketDAO.isVehicleRecurrent(vehicleRegNumber); //Check si le véhicule est recurrent
+                boolean isVehicleInTheParkingYet;
                 isVehicleInTheParkingYet = ticketDAO.isVehicleInTheParkingYet(vehicleRegNumber); // Check si le véhicule est déja dans le parking
-               if(isVehicleInTheParkingYet == true)
+               if(isVehicleInTheParkingYet)
                {
-            	   //throw new Exception("Error : This Vehicle Number is in the parking yet");
+            	   
             	   throw new IllegalArgumentException("Error : This Vehicle Number is in the parking yet");
             	   
                }
-               else {
-                parkingSpot.setAvailable(false); // la place de parking est désormais occupé
-                parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
+              
+                parkingSpot.setAvailable(false);                         // la place de parking est désormais occupé
+                parkingSpotDAO.updateParking(parkingSpot);               //allot this parking space and mark it's availability as false
 
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
@@ -71,10 +70,11 @@ public class ParkingService {
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+ inTime);
                }
-            }
+            
         }catch(Exception e){
             logger.error("Unable to process incoming vehicle",e);
-        }
+       }
+ 
     }
 
     private String getVehichleRegNumber() throws Exception {
@@ -123,10 +123,11 @@ public class ParkingService {
     public void processExitingVehicle() {
         try{
             String vehicleRegNumber = getVehichleRegNumber();
-            Ticket ticket = ticketDAO.getTicketToPay(vehicleRegNumber);
+            Ticket ticket = ticketDAO.getTicketWithOutTimeNull(vehicleRegNumber);
             Date outTime = new Date();
             ticket.setOutTime(outTime);
-            userIsRecurrent =  ticketDAO.isVehicleRecurrent(vehicleRegNumber);  // reinteroger ici la db pour le recurrentuser
+           
+            boolean userIsRecurrent =  ticketDAO.isVehicleRecurrent(vehicleRegNumber);  // reinteroger ici la db pour le recurrentuser
            
             fareCalculatorService.calculateFare(ticket,userIsRecurrent);
             if(ticketDAO.updateTicket(ticket)) {

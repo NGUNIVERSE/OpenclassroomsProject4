@@ -11,10 +11,6 @@ import java.sql.*;
 import java.util.Properties;
 
 public class DataBaseConfig {
-
-	//private String password = "rootroot";
-	
-
 	
 	
     private static final Logger logger = LogManager.getLogger("DataBaseConfig");
@@ -22,19 +18,13 @@ public class DataBaseConfig {
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
-     //   return DriverManager.getConnection("jdbc:mysql://localhost:3306/prod","root","rootroot");
+  
         Properties prop = new Properties();
         try (InputStream input = DataBaseConfig.class.getClassLoader().getResourceAsStream("config.properties")) {
 
 
-
             // load a properties file
             prop.load(input);
-
-            // get the property value and print it out
-         /*   System.out.println(prop.getProperty("db.url"));
-            System.out.println(prop.getProperty("db.user"));
-            System.out.println(prop.getProperty("db.password")); */
 
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -23,18 +23,18 @@ public class ParkingSpotDAO {
         ResultSet rs = null;
         try {
             con = dataBaseConfig.getConnection(); 
-            ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT); // a mettre en dehors du try pour que finnaly puisse l'utiliser
+            ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT); 
             ps.setString(1, parkingType.toString()); // intègre le paramètre numéro 1 avec le type de parking à la requete SQL
-            rs = ps.executeQuery(); // a mettre en dehors du try pour que finnaly puisse l'utiliser
+            rs = ps.executeQuery(); 
             if(rs.next()){
                 result = rs.getInt(1);;
             }
-            dataBaseConfig.closeResultSet(rs);                 // a utiliser pour cloturer proprement
+            dataBaseConfig.closeResultSet(rs);                 
             dataBaseConfig.closePreparedStatement(ps);
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
-        	dataBaseConfig.closeResultSet(rs);                 // a utiliser pour cloturer proprement
+        	dataBaseConfig.closeResultSet(rs);                 
             dataBaseConfig.closePreparedStatement(ps);
             dataBaseConfig.closeConnection(con);
         }
